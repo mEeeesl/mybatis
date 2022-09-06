@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN'
+	'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+<mapper namespace='ch06.dao.map.EmployeeMap'> <!-- 맵퍼 객체-->
+	<select id='selectEmployees' resultType='ch06.domain.Employee'>
+		select employee_id employeeId, last_name lastName, hire_date hireDate
+		from employees
+		order by employee_id
+	</select>
+</mapper>
+
+
+<!--
+	파라미터로 도메인을받거나 문자, 날짜를 받거나 그랬는데, 
+	파라미터로 컬렉션을 받는경우
+	컬렉션은 배열 아님 리스트
+	
+	여기선 파라미터 네임이 없는 상태임.
+	
+	
+ -->

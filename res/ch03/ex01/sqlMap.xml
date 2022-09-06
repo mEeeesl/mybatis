@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN'
+	'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+<mapper namespace='ch03.ex01.Map'> <!-- 맵퍼 객체-->
+	<!-- 과제] selectUsers statement 를 기술하라. 
+			resultMap 을 사용한다. ( address 는 무시 ) -->
+	<!-- stmt 객체 만들기 / userMap < 이름은 임의지정 -->
+	<!-- relation 1 users -->
+	<select id='selectUsers' resultMap='userMap'> <!-- Map 인터페이스의 selectUsers -->
+		select user_id, user_name, reg_date
+		from users
+		order by user_id
+	</select>
+	
+	<!-- 메서드가 없어도 select 생성 가능, 메서드가 없기에 id는 자유지정 
+		resultMap 에서 ▼ 이녀석을 Call하게 만들거임, 그러면 address객체가 만들어지고 myUser의 멤버변수로 사용됨 -->
+	<!-- relation 2 addresses -->	
+	<select id='selectAddress' resultType='address'>
+		select address
+		from addresses
+		where user_id = #{userId}
+	</select>
+	
+<!-- resultMap 객체만들기       ▼ Object, (별명자동부여)중복제거를 위해 따로만든 별칭으로 입력 -->
+	<resultMap id='userMap' type='myUser'> 
+		<id property='userId' column='user_id'/><!-- key가 될거라서 id -->
+		<result property='userName' column='user_name'/>
+		<result property='regDate' column='reg_date'/>
+		<association property='address' column='user_id' select='selectAddress'/>
+		 <!-- association의 column은 파라미터이고, resultMap 객체가 ▲ selectAddress를 콜(실행)함
+		 	 그럼 리턴된 address 객체를 -> association property('address')에 투입됨 
+		 	 ※ 값이 1개일때 가능 = A has a B 
+		 	 ※ A has a Many는 다음 챕터에서 
+		 	※result의 column은 읽어들이기위한 값 -->
+	</resultMap>
+</mapper>
+
+<!--
+	user 테이블, address 테이블에서 값을 만드는거
+	다음 예제에서는 1개의 테이블에서 값을 만들거임
+ -->

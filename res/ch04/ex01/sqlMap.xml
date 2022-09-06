@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN'
+	'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+<mapper namespace='ch04.ex01.Map'> <!-- 맵퍼 객체-->
+	<select id='selectUsers' resultMap='userMap'>
+		select users.user_id, user_name, reg_date
+		from users
+		order by user_id
+	</select>
+			<!-- ▼ 이름 임의지정 -->
+	<select id='selectPosts' resultType='ch04.domain.Post'><!-- Alias 안썼으니 풀네임 적어줘야함 -->
+		select post_title title, post_content content <!-- 뭐때문에 별명까지 썻음 -->
+		from posts
+		where user_id = #{userId}
+	</select>
+	
+	<resultMap id='userMap' type='ch04.domain.User'>
+		<id property='userId' column='user_id'/>
+		<result property='userName' column='user_name'/>
+		<result property='regDate' column='reg_date'/>
+		<collection property='posts' column='user_id' select='selectPosts'/>
+	<!-- collection - 값의 타입이 List일때 사용, 				▲ 얘를 콜함
+		user_id의 필드값을 selectPosts의 파라미터로 쓰겠다 -->
+	</resultMap>
+</mapper>
+
+<!--
+	user 테이블, address 테이블에서 값을 만드는거
+	다음 예제에서는 1개의 테이블에서 값을 만들거임
+ -->

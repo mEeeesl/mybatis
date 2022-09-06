@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN'
+	'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+<mapper namespace='ch02.ex01.Map'> <!-- 맵퍼 객체-->
+	<!-- selectUsers 배열객체를 만듦 / statement 객체 / Map 인터페이스의 selectUsers 동일하게 적어줌 
+	id = 메서드명, resultType 리턴, parameterType = 매개변수	-->
+	<select id='selectUsers' resultType= 'user'><!-- ch02.domain.User = user로 Alias 된 상태 -->
+		select user_id userId, user_name userName, reg_date regDate<!-- 쿼리 / 오라클로 리퀘스트 보냄 / 칼럼 네임을 일치시켜줘야 좋대 -->
+		from users
+		order by user_id
+	</select>
+</mapper>
+
+<!-- 
+	selectUsers 객체를 만듦 / statement 객체 / Map 인터페이스의 selectUsers (메소드명)로 동일하게 적어줌
+	resultType='user' => ch02.domain.user
+	맵퍼객체가 Map 인터페이스의 selectUsers();를, 리스트로 담아서 리턴해줌
+	ch02.ex01.Main -> userts.forEach(system.out::println);로 리턴
+	sql 맵핑 프레임워크
+	오라클로 보내서 쿼리를 실행한 결과로 릴레이션을 받고, 그값으로 OR매핑 하는듯
+ -->

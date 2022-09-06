@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN'
+	'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+<mapper namespace='ch05.ex03.Map'> <!-- 맵퍼 객체-->
+	<select id='selectUsers' resultMap='userMap'>
+		select users.user_id, user_name, reg_date, post_title, post_content
+		from users join posts
+		on users.user_id = posts.user_id
+		<where> <!-- where절에서 1개 이상 true면 where절 시작 및 리턴 -->
+			<if test='userName != null'>
+				user_name = #{userName}
+			</if>
+			<if test='post != null and post.title != null'>
+				and post_title like '%' || #{post.title} || '%'
+			</if>
+			<if test='post != null and post.content != null'>
+				and post_content like '%' || #{post.content} || '%'
+			</if>
+			
+		</where>
+	</select>
+	
+	<resultMap id='userMap' type='ch05.domain.User'>
+		<id property='userId' column='user_id'/>
+		<result property='userName' column='user_name'/>
+		<result property='regDate' column='reg_date'/>	<!--  속성 순서는 바껴도됨 ▼ -->
+		<collection property='posts' columnPrefix='post_' ofType='ch05.domain.Post'>
+			<result property='title' column='title'/>
+			<result property='content' column='content'/>
+		</collection>
+	</resultMap>
+</mapper>
+
+
+<!--
+ 	where을 써야
+ 	and며 or이며 쓸 수 있는데
+ 
+ 	마이바티스 수준이 올라가서 이제 이렇게도 쓸 수 있음
+
+ 	userName = null 이면
+ 
+ 	SQL에서는 where and로 바로 조져지기 때문에 에러가 발생함.
+ 	근데 수준이 올라가서 and로 바로 안조져지게 자동 적용됨 걱정 노노
+
+ -->

@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN'
+	'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+<mapper namespace='ch05.ex06.Map'> <!-- 맵퍼 객체-->
+	<select id='selectUsers' resultType='ch05.domain.User'>
+		
+		<include refid='selectUser'><!--  밑에 <sql> 코드가, 일루 드감 -->
+			<property name='tableName' value='users'/>
+		</include>
+		
+		<where>
+			<if test='userIds != null'>
+				user_id in <!-- item='임의지정' collection='domain 멤버변수명' -->
+				<foreach item='userId' collection='userIds' open='(' separator=',' close=')'>
+					#{userId}
+				</foreach>
+			</if>
+			<if test='userNames != null'>
+				and user_name in 
+				<foreach item='userName' collection='userNames' open='(' separator=',' close=')'>
+					#{userName}
+				</foreach>
+			</if>
+		</where>
+		
+	</select>
+	
+	<sql id='selectUser'>
+		select user_id userId, user_name userName, reg_date regDate
+		from ${tableName} <!-- ◀ 변수처리 --> 
+	</sql>
+</mapper>
+
+
+<!--
+파라미터가 n개인 경우
+배열이나 리스트로 준비해서, in / any / all
+
+
+ -->

@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN'
+	'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+<mapper namespace='ch05.ex05.Map'> <!-- 맵퍼 객체-->
+	<select id='selectUser' resultType='ch05.domain.User'>
+		select user_id userId, user_name userName, reg_date regDate
+		from users
+		<!-- 파라미터 없어서 대명사 써야함 + 파라미터가 달랑 1개라 쓸 수 있음 -->
+		<!-- 가독성 떨어지고 유지보수 어려워져서 비추천 -->
+		<if test='_parameter != null and _parameter.equals("king")'>
+			where user_name = #{userName}
+		</if> 
+	</select>
+
+</mapper>
+
+
+<!--
+파라미터 네임을 지정하는 방법 번외편 ( = #{ 여기 Name } ) 
+(메서드에서 n개이상 넘어올때) (1개면 아무거나 써두댐)
+
+1. Domain의 멤버변수명 
+ update 메서드가 파라미터로 User(Domain)객체를 받는데,
+ User(Domain) 객체의 멤버변수 이름에 짝지어서 
+ regDate, userName이라고 mapping 한것임
+
+2. 어노테이션 @Param
+
+3. 대명사 + 파라미터가 달랑 1개라 쓸 수 있음 - 권장하지 않는 방법 
+ -->

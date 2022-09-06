@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN'
+	'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+<mapper namespace='ch02.ex02.Map'> <!-- 맵퍼 객체-->
+	<!-- selectUser 특정 객체 찾기 / Map 인터페이스의 selectUser 동일하게 적어줌 
+		id = 메서드명, resultType 리턴, parameterType = 매개변수	-->
+
+	<select id='selectUser' resultMap='userMap'>
+		select user_id, user_name, reg_date
+		from users
+		where user_id = #{userId} <!-- #{임의의 값} 파라미터는 어차피 1개라 잘 작동한데, 가독성을 위해 Map 인터페이스의 파라미터네임과 같게해준거 -->
+	</select>
+	
+	<select id='selectUser2' resultMap='userMap'>
+		select user_id, user_name, reg_date
+		from users
+		where user_name = #{userName}
+	</select>
+	
+	<select id='selectUser3' resultMap='userMap'>
+		select user_id, user_name, reg_date
+		from users
+		where reg_date = #{regDate}
+	</select>
+	
+	<resultMap id='userMap' type='user'><!-- column='relation값' -->
+		<id property='userId' column='user_id'/> <!-- 매핑하는방식 이렇게해서 이렇게받을거다 // result가 아닌 id로 태그한것은 id가 pk고 index가 있으니 빨리찾기위해서다 -->
+		<result property='userName' column='user_name'/>
+		<result property='regDate' column='reg_date'/>
+	</resultMap>
+</mapper>
+
+<!-- 
+	1. resultType= 'user' 이거 안써서 지금은 OR MAPPING이 불가함
+	
+	2. resultMap='userMap' 이거로도 할 수 있음
+ -->

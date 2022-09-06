@@ -1,0 +1,87 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<!DOCTYPE configuration PUBLIC './/mybatis.org//DTD config 3.0//EN'
+	'http://mybatis.org/dtd/mybatis-3-config.dtd'>
+<configuration> <!--  루트태그  --> <!-- ""해도되고 '' 해도됨 -->
+
+ <!-- 처음 소스 -->
+	<properties resource='config/jdbc.properties'>   <!--  불러오기 config 패키지에있는 jdbc.properties 파일 -->
+  	<property name='driver' value='oracle.jdbc.driver.OracleDriver'/>  <!--  새로 추가하기? 커넥션 단계?  -->
+	</properties> 
+
+
+<!--  hr로 연결하기  
+ 	<properties resource='config/hr.properties'/>
+-->
+ 	
+ 	<settings><!-- typeAliases 보다 위쪽에서 setting 해야함 -->
+ 		<setting name='cacheEnabled' value='false'/>	<!-- 기존에 OR 매핑 되어있더라도 적용되지 않는데 -->
+ 		<setting name='localCacheScope' value='STATEMENT'/><!-- 문장 하나하나별로 cache함, 코드별로 각자 cache함 -->
+ 	</settings>
+ 	
+ 	
+ 	
+	<typeAliases><!--  type의 별명 지어주기  -->
+		<typeAlias type='ch02.domain.User' alias='user'/>
+		<package name='ch03.domain'/> <!-- 클래스마다 클래스명으로 별명을 자동부여 -->
+	</typeAliases>
+				<!--  environments = Transaction 관리와 커넥션 풀링을 위한 환경설정 -->
+	<environments default='development'>	<!-- 이름은 임의지정 -->
+		<environment id='development'>
+			<transactionManager type='JDBC'/>
+			<dataSource type='POOLED'>   <!--  pooled - 커넥션 n개 준비  (성능개선)  -->
+				<property name='driver' value='${driver}'/> <!-- $ = EL(Expression Language) 6행 value값 , 커넥션 단계 -->
+				<property name='url' value='${url}'/><!-- jdbc.properties 파일 url 값 -->
+				<property name='username' value='${username}'/>
+				<property name='password' value='${password}'/>
+			</dataSource>
+		</environment>
+		<environment id='hr'>
+        	<transactionManager type='JDBC'/>
+         	<dataSource type='POOLED'>
+            	<property name='driver' value='${driver}'/>
+	            <property name='url' value='${url}'/>
+	            <property name='username' value='${username}'/>
+	            <property name='password' value='${password}'/>
+	         </dataSource>
+    	 </environment>
+	</environments>
+			<!-- mappers = SQL 코드와 매핑 정의를 가지는, XML 파일인 mapper의 목럭을 지정 -->
+	<mappers> <!-- OR mapping 의 map / 문서 하나하나가 mapper -->
+   
+<!--	<mapper resource='ch02/ex01/sqlMap.xml'/> --> <!-- 클래스면 '.' , 클래스아니면(패키지) '/' -->
+<!-- 	<mapper resource='ch02/ex02/sqlMap.xml'/>
+		<mapper resource='ch02/ex03/sqlMap.xml'/>
+		<mapper resource='ch02/ex04/sqlMap.xml'/>
+		<mapper resource='ch02/ex05/sqlMap.xml'/>
+		<mapper resource='ch03/ex01/sqlMap.xml'/>
+		<mapper resource='ch03/ex02/sqlMap.xml'/>
+		<mapper resource='ch04/ex01/sqlMap.xml'/>
+		<mapper resource='ch04/ex02/sqlMap.xml'/>
+		<mapper resource='ch05/ex01/sqlMap.xml'/>
+		<mapper resource='ch05/ex02/sqlMap.xml'/>
+		<mapper resource='ch05/ex03/sqlMap.xml'/>
+		<mapper resource='ch05/ex04/sqlMap.xml'/>
+		<mapper resource='ch05/ex05/sqlMap.xml'/>
+		<mapper resource='ch05/ex06/sqlMap.xml'/>
+		<mapper resource='ch05/ex07/sqlMap.xml'/>
+-->
+
+<!--  	<mapper resource='ch06/dao/map/employeeMap.xml'/> -->
+		<mapper class='ch07.ex01.Map'/>
+		<mapper class='ch07.ex02.Map'/>
+		<mapper class='ch07.ex03.Map'/>
+		<mapper class='ch07.ex04.Map'/>
+		<mapper class='ch07.ex05.Map'/>
+
+	</mappers> <!-- Map registery -->
+</configuration>
+
+
+<!-- 
+${proverty value}
+
+
+
+
+
+ -->

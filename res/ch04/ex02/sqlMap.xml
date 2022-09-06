@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN'
+	'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+<mapper namespace='ch04.ex02.Map'> <!-- 맵퍼 객체-->
+
+	<select id='selectUsers' resultMap='userMap'>
+		select user_id, user_name, reg_date, post_title, post_content
+		from users join posts
+		using(user_id)
+		order by user_id
+	</select>
+
+	<!-- 			■  Setter로 DI 하기  ■ 
+	 
+	<resultMap id='userMap' type='ch04.domain.User'>
+		<id property='userId' column='user_id'/>
+		<result property='userName' column='user_name'/>
+		<result property='regDate' column='reg_date'/>
+		<collection property='posts' resultMap='postMap'/>
+	</resultMap>
+	-->
+	
+	<!-- 			■  	생성자로 DI 하기   ■				  -->
+	
+	<resultMap id='userMap' type='ch04.domain.User'> 
+		<constructor> <!-- 미리 생성자 사용하려고 만들어뒀었음, 안만들면 생성자로 DI작업이 불가능 -->
+		<idArg column='user_id' javaType='_int'/>
+			<arg column='user_name' javaType='String'/>
+			<arg column='reg_date' javaType='java.time.LocalDate'/>
+		</constructor>
+		<collection property='posts' resultMap='postMap'/><!-- List Type은 collection -->
+	</resultMap>
+	
+	<resultMap id='postMap' type='ch04.domain.Post'>
+		<result property='title' column='post_title'/>
+		<result property='content' column='post_content'/>
+	</resultMap>
+	
+</mapper>
+
+	
+<!--
+users , posts를 join 해서 1개의 relation에 담기
+	
+ -->

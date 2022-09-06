@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN'
+	'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+<mapper namespace='ch05.ex02.Map'> <!-- 맵퍼 객체-->
+	<select id='selectUser' resultMap='userMap'>
+		<bind name='title' value='"%" + post.title + "%"'/><!-- 변수를 만들어줌 -->
+		<bind name='content' value='"%" + post.content + "%"'/><!-- stmt내에서 사용 -->
+		select users.user_id, user_name, reg_date, post_title, post_content
+		from users join posts
+		on users.user_id = posts.user_id
+		where user_name = #{userName}
+		<choose><!-- if와 달리/ n개 코드 나열 후, 첫 true 녀석 1개만 적용 -->
+		  <!-- 위에서부터 when절 실행, 처음으로 true인 녀석만 나오고 choose절 종료 -->
+			<when test='post != null and post.title != null'>
+				and posts.post_title like #{title}	<!-- #{저 위에 title의 value값} -->		
+			</when>
+			<when test='post != null and post.content != null'>
+				and posts.post_content like #{content}				
+			</when>
+			<otherwise> <!-- when절이 싹 false면, 이거 실행 -->
+				and posts.user_id is not null 
+			</otherwise>
+		</choose>
+	</select>
+
+
+	<resultMap id='userMap' type='ch05.domain.User'>
+		<id property='userId' column='user_id'/>
+		<result property='userName' column='user_name'/>
+		<result property='regDate' column='reg_date'/>			<!-- ▼ 이거쓰면 코드중복 방지 -->
+		<collection property='posts' ofType='ch05.domain.Post' columnPrefix='post_'>
+			<result property='title' column='title'/> <!-- 원래 column='post_title', 'post_content'였음 -->
+			<result property='content' column='content'/>
+		</collection>
+	</resultMap>
+</mapper>
+
+<!--
+
+
+ -->
